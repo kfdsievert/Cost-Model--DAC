@@ -8,7 +8,7 @@ The following are required to run the code:
 - Python 3.8 or higher
 - numpy
 - pandas
-- XlsxWriter
+- [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html)
 
 ### Installing
 You can clone the repository and run the code locally using the CLI or a Python IDE. To install all dependencies, run the following command in the terminal:
@@ -26,3 +26,7 @@ Katrin Sievert - katrin.sievert@gess.ethz.ch
 
 ## License
 The details of the license can be found in the [LICENSE](https://github.com/kfdsievert/Cost-Model--DAC/blob/main/LICENSE) file.
+
+## Important 
+- The code runs Monte Carlo simulations that may require significant processing time.
+- The code creates an output folder in the directory where it is run. All outputs are stored here.
