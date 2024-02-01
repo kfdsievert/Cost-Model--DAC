@@ -25,4 +25,4 @@ The two main ways to run the program are:
 Katrin Sievert - katrin.sievert@gess.ethz.ch
 
 ## License
-The details of the license can be found in the LICENSE file.
+The details of the license can be found in the [LICENSE](https://github.com/kfdsievert/Cost-Model--DAC/blob/main/LICENSE) file.
