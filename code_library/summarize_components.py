@@ -2,6 +2,21 @@ import numpy as np
 import pandas as pd
 
 def summarize_components(output, column_names_cost, column_names_lr):
+    '''
+    SUMMARIZE_COMPONENTS: This function calculates the mean of cost and learning rate components
+    for each unique capacity value in the output DataFrame. The mean is calculated only for rows
+    where the LCOR value falls within the 45th to 55th percentile range for each capacity.
+
+    Parameters:
+    output (Pandas DataFrame): Output data
+    column_names_cost (list): List of column names in the output DataFrame that represent cost components
+    column_names_lr (list): List of column names in the output DataFrame that represent learning rate components
+
+    Returns:
+    mean_cost_df (Pandas DataFrame): DataFrame containing the mean cost components for each unique capacity
+    mean_lr_df (Pandas DataFrame): DataFrame containing the mean learning rate components for each unique capacity
+    '''
+
     capacities = np.unique(output['Capacity'])
     mean_costs_data = []
     mean_lrs_data = []
@@ -34,7 +49,6 @@ def summarize_components(output, column_names_cost, column_names_lr):
     mean_lr_df = pd.DataFrame(mean_lrs_data, columns=['Capacity'] + column_names_lr)
 
     return mean_cost_df, mean_lr_df
-
 
 
 

@@ -5,15 +5,17 @@ import numpy as np
 import pandas as pd
 
 def variable_opex(input, tech, capacity):
-    #VARIABLE_OPEX computes the variable operating costs of
-    #each DAC technology given the parameters in the inputs.
-    #INPUTS
-    #   input (InputTemplate) ... standard input data structure
-    #   tech (String) ... technology name.
-    #
-    #OUTPUT
-    #   vom (double) ... variable operating and maintenance costs in $/tCO2
+    '''
+    VARIABLE_OPEX: This function computes the variable operating costs of
+    each Direct Air Capture (DAC) technology given the parameters in the inputs.
 
+    Parameters:
+    input (InputTemplate): Standard input data structure
+    tech (String): Technology name
+
+    Returns:
+    vom (double): Variable operating and maintenance costs in $/tCO2
+    '''
     #get foak scale
     foak_scale = adjusted_foak_scale(input, tech)
     
@@ -52,7 +54,7 @@ def variable_opex(input, tech, capacity):
     cop_heatpump = input.technology.loc["cop_heatpump", tech]#dimensionless
     #capacity_factor = input.technology.loc["plant_capacity_factor", tech]#Unit: dimensionless #CHANGED THIS TECHNOLOGY INSTEAD OF UNIVERSAL; tech instead of value
 
-    #use learning rate to create learning factor
+    # Use learning rate to create learning factor
     lr_opex = input.universal.loc["learning_rate_opex", "Value"] #retrieves learning rate for variable OPEX from input data 
     lf_opex = learning_factor(lr_opex, foak_scale, capacity) #calculation of learning factor for variable OPEX
 
@@ -72,17 +74,17 @@ def variable_opex(input, tech, capacity):
     chemicals_cost = chemicals_cost*lf_opex
     storage_cost = storage_cost*lf_opex
     
-    #compute final variable cost
+    # Compute final variable cost
     vom = (electricity_cost + gas_cost + gasoline_cost + water_cost + \
         chemicals_cost + transport_cost + storage_cost)#*(capacity_factor/0.9)#Unit: $/tCO2
     
-    # save value for future use
+    # Save value for future use
     index = ['vom_' + tech]
     component_costs = {'Learned_direct_materials_cost': [vom], 
                        'Learning_rate':                 [lr_opex]}
     component_costs = pd.DataFrame(component_costs, index = index)
 
-    #function checks whether capacity equals foak_scale. If not, function returns learned vom value
+    # Function checks whether capacity equals foak_scale. If not, function returns learned vom value
     if np.isclose(capacity, foak_scale):
         input.unlearned.vom = vom
         input.unlearned.component_costs = pd.concat([input.unlearned.component_costs, component_costs])

@@ -1,9 +1,10 @@
 import numpy as np
 
 class UnlearnedVars:
-#INPUTTEMPLATE This class is simply a container in which to store all of the
-#relevant input tables. It makes passing the inputs into functions cleaner. All 
-#instance varaibles are initialized to "NA" until data is added to them.
+    '''
+    UnlearnedVars: This class is a container to store all of the relevant input tables for unlearned variables.
+    It makes passing the inputs into functions cleaner. All instance variables are initialized to "NA" or NaN until data is added to them.
+    '''
 
     def __init__(self):
         self.adjusted_foak_scale = np.nan
@@ -21,9 +22,10 @@ class UnlearnedVars:
         self.lcor = np.nan      
 
 class LearnedVars:
-#INPUTTEMPLATE This class is simply a container in which to store all of the
-#relevant input tables. It makes passing the inputs into functions cleaner. All 
-#instance varaibles are initialized to "NA" until data is added to them.
+    '''
+    LearnedVars: This class is a container to store all of the relevant input tables for learned variables.
+    It makes passing the inputs into functions cleaner. All instance variables are initialized to "NA" or NaN until data is added to them.
+    '''
 
     def __init__(self):
         self.epc_cost = np.nan
@@ -35,9 +37,10 @@ class LearnedVars:
         self.component_costs = "NA"        
 
 class InputTemplate:
-#INPUTTEMPLATE This class is simply a container in which to store all of the
-#relevant input tables. It makes passing the inputs into functions cleaner. All 
-#instance varaibles are initialized to "NA" until data is added to them.
+    '''
+    InputTemplate: This class is a container to store all of the relevant input tables.
+    It makes passing the inputs into functions cleaner. All instance variables are initialized to "NA" until data is added to them.
+    '''
 
     def __init__(self):
         self.universal = "NA"

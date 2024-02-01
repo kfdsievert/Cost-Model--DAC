@@ -7,25 +7,26 @@ import numpy as np
 import pandas as pd
 
 def levelized_cost_of_capital(input, tech, capacity):
-    #LCOC computes the levelized cost of capital of
-    #each DAC technology given the parameters in the inputs.
-    #INPUTS
-    #   input (InputTemplate) ... standard input data structure
-    #   tech (String) ... technology name.
-    #
-    #OUTPUT
-    #   lcoc (double) ... levelized cost of capital in $/(tCO2)
+    '''
+    LCOC computes the levelized cost of capital of each DAC technology given the parameters in the inputs.
 
-    #get foak scale
+    Parameters:
+    input (InputTemplate): Standard input data structure
+    tech (String): Technology name.
+
+    Returns:
+    lcoc (double): Levelized cost of capital in $/(tCO2)
+    '''
+    # Retrieve FOAK scale
     foak_scale = adjusted_foak_scale(input, tech) #Unit: tCO2
 
-    #Use saved value, if available
+    # Use saved value, if available
     if np.isclose(capacity, foak_scale) & ~np.isnan(input.unlearned.lcoc):
         return input.unlearned.lcoc
     elif ~np.isclose(capacity, foak_scale) & ~np.isnan(input.learned.lcoc):
         return input.learned.lcoc
    
-    # extract relevant data from inputs
+    # Extract relevant data from inputs
     owners_cost_fraction = input.universal.loc["owners_cost", "Value"]#Unit: dimensionless
     spare_parts_fraction = input.universal.loc["spare_parts_cost", "Value"]#Unit: dimensionless
     startup_capital_fraction = input.universal.loc["startup_capital", "Value"]#Unit: dimensionless
@@ -38,14 +39,14 @@ def levelized_cost_of_capital(input, tech, capacity):
     plant_life = input.universal.loc["plant_life", "Value"]#Unit: years
     capacity_factor = input.technology.loc["plant_capacity_factor", tech]#Unit: dimensionless #tech-specific
 
-    # calculate the total plant cost
+    # Calculate the total plant cost
     tpc = total_plant_cost(input,tech, capacity)
     tpc_unlearned = total_plant_cost(input, tech, foak_scale)
 
-    # get energy prices
+    # Get energy prices
     gas_price = energy_price(input)[1]
 
-    #calculate additional missing costs
+    # Calculate additional missing costs
     owners_cost = owners_cost_fraction * tpc_unlearned
     spare_parts_cost = spare_parts_fraction*tpc_unlearned
     startup_capital = startup_capital_fraction*tpc_unlearned
@@ -53,25 +54,25 @@ def levelized_cost_of_capital(input, tech, capacity):
     startup_fuel = gas_price*gas_requirement*foak_scale*startup_fuel_fraction
     startup_chemicals = startup_chemical_fraction*chemicals_cost*foak_scale
 
-    #start-up learning rate
+    # Start-up learning rate
     lr_startup = input.technology.loc["learning_rate_startup_cost", tech]
     lf_startup = learning_factor(lr_startup, foak_scale, capacity)
 
 
-    #total overnight cost (=total capital requirement)
+    # Total overnight cost ( =total capital requirement)
     tcr = tpc + (owners_cost + spare_parts_cost + startup_capital +\
         + startup_labor + startup_fuel + startup_chemicals)*lf_startup
     
-    #compute capital recovery factor
+    # Compute capital recovery factor
     crf = discount_rate*(1+discount_rate)**plant_life/((1+discount_rate)**plant_life-1)
 
-    #compute annualized total overnight cost
+    # Compute annualized total overnight cost
     annualized_overnight = tcr*crf
 
-    #compute the lcoc
+    # Compute the lcoc
     lcoc = annualized_overnight/(foak_scale*capacity_factor)
 
-    #save value for future use
+    # Save value for future use
     index = ['owners_cost_' + tech, 'spare_parts_cost_' + tech, 'startup_capital_' + tech, 'startup_labor_' + tech, 'startup_fuel_' + tech, 'startup_chemicals_' + tech ]
     component_costs = {'Learned_direct_materials_cost': [owners_cost *lf_startup, spare_parts_cost*lf_startup, startup_capital*lf_startup, startup_labor*lf_startup, startup_fuel*lf_startup, startup_chemicals*lf_startup], 
                        'Learning_rate':                 [lr_startup,  lr_startup, lr_startup, lr_startup, lr_startup, lr_startup]}

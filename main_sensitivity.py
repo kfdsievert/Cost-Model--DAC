@@ -1,7 +1,10 @@
-
 ### Add necessary paths -------------------------------------------------------
 import sys
-sys.path.insert(1,".\\code_library")#add path of lib folder
+import os
+current_dir = os.path.dirname(os.path.realpath(__file__))
+lib_path = os.path.join(current_dir, "code_library")
+# Add the library path to sys.path
+sys.path.insert(1, lib_path)
 
 ### Add necessary packages ----------------------------------------------------
 import os
@@ -28,12 +31,14 @@ from InputTemplate import *
 
 # Manual Inputs ----------------------------------------------------------------
 
-# File path and file name of input/output
-input_filepath = ".\\input\\"
-input_filename = "inputs_DACS_multi.xlsx"
+#File path and file name of input/output
+input_filepath = os.path.join(current_dir, "inputs/")
+input_filename = "inputs_DACS_single.xlsx"
 
-output_filepath = ".\\output\\"
-output_filename = "output_DACS_multi_sensitivity.xlsx"
+output_filepath = os.path.join(current_dir, "output/")
+# Create output directory if it doesn't exist
+os.makedirs(output_filepath, exist_ok=True)
+output_filename = "output_DACS_single_5000.xlsx"
 writer = pd.ExcelWriter(output_filepath + output_filename, engine='xlsxwriter') #necesary  writting multiple sheets 
 
 # List relevant technologies
