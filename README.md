@@ -2,6 +2,7 @@
 
 ## Description
 Accompanying code for "Considering technology characteristics to project future costs of direct air capture" 
+You can cite all versions by using the DOI 10.5281/zenodo.10617769. This DOI represents all versions, and will always resolve to the latest one.
 
 ### Dependencies
 The following are required to run the code: 
